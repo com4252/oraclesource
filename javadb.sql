@@ -70,4 +70,38 @@ product_id number(8) not null references product(product_id));
 
 create sequence order_seq;
 
+alter table sorder add order_date date; -- 구매날짜
+
 commit;
+
+insert into sorder values(order_seq.nextval, 물건을구매한id, 상품id, sysdate);
+
+
+-- user_id,name,pay_no,info
+-- suser와 paytype join 
+
+select u.user_id, u.name, u.pay_no, p.info
+from suser u, paytype p
+where u.pay_no = p.pay_no and u.user_id=1000;
+
+-- 주문정보 전체 조회
+select * from sorder;
+
+-- 주문목록 조회
+-- user_id, name, card/cash, product_id, pname, price, content
+
+-- 기준 : sorder
+-- suser 테이블 : name     pay_no 위아래두개와 join
+-- paytype 테이블 : cash/card      pay_no
+-- product 테이블 : product_id, pname, price, content
+
+-- 전체 주문목록 조회
+select s.user_id, u.name, t.info, s.product_id, p.pname, p.price, p.content, s.order_date
+from sorder s, suser u, paytype t, product p
+where s.user_id = u.user_id and u.pay_no = t.pay_no and s.product_id = p.product_id;
+
+
+-- 홍길동 주문목록 조회
+select s.user_id, u.name, t.info, s.product_id, p.pname, p.price, p.content, s.order_date
+from sorder s, suser u, paytype t, product p
+where s.user_id = u.user_id and u.pay_no = t.pay_no and s.product_id = p.product_id and s.user_id=1000;
